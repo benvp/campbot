@@ -7,21 +7,45 @@ defmodule Campbot.Crawler do
 
   def get_campsites(start_date, park_id, page \\ 0) do
     cookies = get_cookies()
+
+    # we have to get campsite_html twice to
+    # initialise the session properly
     get_campsite_html(start_date, park_id, page, cookies)
     set_filters(park_id, cookies)
-    html = get_campsite_html(start_date, park_id, page, cookies)
 
-    html
-    |> Floki.find("#csitecalendar > table#calendar > tbody > tr:not(.separator)")
-    |> Floki.find("td.status.a")
-    |> parse()
+    get_campsite_html(start_date, park_id, page, cookies)
+    |> get_site_rows_dom()
+    |> parse_row()
   end
 
-  def parse(html) do
-    html
-    |> Floki.find("a")
-    |> Floki.attribute("href")
-    |> Enum.map(&(CampSite.new(@root_url, &1)))
+  defp get_site_rows_dom(html) do
+    Floki.find(html, "#csitecalendar > table#calendar > tbody > tr:not(.separator)")
+  end
+
+  defp parse_row(site_row_dom) do
+    site_row_dom
+    |> Floki.find("td.status.a")
+    |> Enum.map(&(CampSite.new(@root_url, site_row_dom, &1)))
+  end
+
+  defp get_cookies() do
+    %HTTPoison.Response{headers: headers} = HTTPoison.get!(@cookie_url)
+    Enum.filter(headers, fn
+      {"Set-Cookie", _ } -> true
+      _ -> false
+    end)
+    |> Enum.map(fn {_, cookie} -> cookie end)
+    |> Enum.map(fn cookie ->
+      [head | _] = String.split(cookie, ";")
+      head
+    end)
+    |> Enum.join("; ")
+  end
+
+  defp get_campsite_html(start_date, park_id, page, cookies) do
+    url = build_url(start_date, park_id, page)
+    %HTTPoison.Response{:body => body} = HTTPoison.get!(url, [], hackney: [cookie: cookies])
+    body
   end
 
   defp set_filters(park_id, cookies) do
@@ -41,27 +65,6 @@ defmodule Campbot.Crawler do
     ]
 
     HTTPoison.post!(@filter_url, {:form, form}, [], hackney: [cookie: cookies])
-  end
-
-  defp get_cookies() do
-    %HTTPoison.Response{headers: headers} = HTTPoison.get!(@cookie_url)
-    IO.inspect(headers)
-    Enum.filter(headers, fn
-      {"Set-Cookie", _ } -> true
-      _ -> false
-    end)
-    |> Enum.map(fn {_, cookie} -> cookie end)
-    |> Enum.map(fn cookie ->
-      [head | _] = String.split(cookie, ";")
-      head
-    end)
-    |> Enum.join("; ")
-  end
-
-  defp get_campsite_html(start_date, park_id, page, cookies) do
-    url = build_url(start_date, park_id, page)
-    %HTTPoison.Response{:body => body} = HTTPoison.get!(url, [], hackney: [cookie: cookies])
-    body
   end
 
   def is_last_page(_body, _page) do
