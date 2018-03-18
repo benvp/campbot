@@ -8,14 +8,27 @@ defmodule Campbot.Crawler do
   def get_campsites(start_date, park_id, page \\ 0) do
     cookies = get_cookies()
 
-    # we have to get campsite_html twice to
-    # initialise the session properly
+    # we have to get campsite_html twice to initialise the session properly
     get_campsite_html(start_date, park_id, page, cookies)
     set_filters(park_id, cookies)
 
-    get_campsite_html(start_date, park_id, page, cookies)
-    |> get_site_rows_dom()
-    |> parse_row()
+    # when last page return empty list, otherwise get next page
+    html = get_campsite_html(start_date, park_id, page, cookies)
+    cond do
+      is_last_page(html) -> []
+      true ->
+        html
+        |> get_site_rows_dom
+        |> parse_row
+    end
+  end
+
+  def is_last_page(html) do
+    # a[id^="resultNext"] has class "disabled"
+    case Floki.find(html, ~s{a[id^="resultNext"].disabled}) do
+      [] -> false
+      _ -> true
+    end
   end
 
   defp get_site_rows_dom(html) do
@@ -65,11 +78,6 @@ defmodule Campbot.Crawler do
     ]
 
     HTTPoison.post!(@filter_url, {:form, form}, [], hackney: [cookie: cookies])
-  end
-
-  def is_last_page(_body, _page) do
-    # last page is page > 0
-    # and a[id^="resultPrevious"] has class "disabled"
   end
 
   defp build_url(start_date, park_id, page) do
