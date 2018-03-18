@@ -23,7 +23,7 @@ defmodule Campbot.Crawler do
     end
   end
 
-  def is_last_page(html) do
+  defp is_last_page(html) do
     # a[id^="resultNext"] has class "disabled"
     case Floki.find(html, ~s{a[id^="resultNext"].disabled}) do
       [] -> false

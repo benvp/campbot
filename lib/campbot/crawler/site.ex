@@ -7,8 +7,6 @@ defmodule Campbot.Crawler.CampSite do
     reservation_url = URI.merge(root_url, extract_reservation_url(row_td_dom)) |> to_string()
     query = query_map(row_td_dom)
 
-    IO.inspect(query)
-
     %CampSite{
       id: query["siteId"],
       site_no: site_no(site_row_dom),
@@ -27,7 +25,6 @@ defmodule Campbot.Crawler.CampSite do
 
   def extract_reservation_url(row_td_dom) do
     row_td_dom
-    |> IO.inspect()
     |> Floki.find("a")
     |> Floki.attribute("href")
     |> List.first()
