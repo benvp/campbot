@@ -18,8 +18,11 @@ defmodule Campbot.Crawler do
       is_last_page(html) -> []
       true ->
         html
-        |> get_site_rows_dom
-        |> parse_row
+        |> get_site_rows_dom()
+        # BUG: here is a bug as the site_row_dom contains all rows
+        # this will lead to incorrect site numbers
+        |> parse_row()
+        |> filter_campsites_to_date(start_date)
     end
   end
 
@@ -37,7 +40,7 @@ defmodule Campbot.Crawler do
 
   defp parse_row(site_row_dom) do
     site_row_dom
-    |> Floki.find("td.status.a")
+    |> Floki.find("td.status.a > a")
     |> Enum.map(&(CampSite.new(@root_url, site_row_dom, &1)))
   end
 
@@ -91,5 +94,10 @@ defmodule Campbot.Crawler do
     &sitepage=true\
     &startIdx=#{page_index}\
     """
+  end
+
+  defp filter_campsites_to_date(campsites, date) do
+    campsites
+    |> Enum.filter(&(&1.arrival_date === date))
   end
 end

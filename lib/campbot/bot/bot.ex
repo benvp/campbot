@@ -5,8 +5,10 @@ defmodule Campbot.Bot do
   defdelegate get_subscribers(), to: Subscribers, as: :get_all
 
   def notify_users(campsites) do
-    # build message
-    # send message
+    for subscriber_id <- Subscribers.get_all(),
+        site <- campsites do
+      send_campsite_message(subscriber_id, site)
+    end
   end
 
   def process_message(message) do
@@ -32,15 +34,31 @@ defmodule Campbot.Bot do
     |> Enum.member?(psid)
   end
 
+  def send_campsite_message(psid, campsite) do
+    send_message(psid, campsite_message(campsite))
+  end
+
   def send_message(psid, message) do
     page_access_token = Application.get_env(:campbot, :facebook_messenger_page_access_token)
     url = "https://graph.facebook.com/v2.6/me/messages?access_token=#{page_access_token}"
     headers = [{"Content-type", "application/json"}]
     body = %{
       recipient: %{id: psid},
-      message: %{text: message}
+      message: %{text: message},
+      notification_type: "REGULAR"
     }
 
     HTTPoison.post!(url, Poison.encode!(body), headers)
+  end
+
+  defp campsite_message(campsite) do
+    """
+    G'day mate. 👋 Just wanted to let you know that there is a campsite available! Here are the details:
+    Campsite: #{campsite.park_id}
+    Date: #{campsite.arrival_date}
+    Book here: #{campsite.href}
+
+    Hope you enjoy your stay. Cheers! 🍻
+    """
   end
 end

@@ -12,7 +12,8 @@ defmodule Campbot.Application do
       supervisor(CampbotWeb.Endpoint, []),
       # Start your own worker by calling: Campbot.Worker.start_link(arg1, arg2, arg3)
       # worker(Campbot.Worker, [arg1, arg2, arg3]),
-      worker(Campbot.Bot.Subscribers, [])
+      worker(Campbot.Bot.Subscribers, []),
+      worker(Campbot.Crawler.Job, [[name: :mather, park_id: "70971", date: "4/14/2018"]]),
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html
