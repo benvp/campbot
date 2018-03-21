@@ -28,7 +28,7 @@ defmodule Campbot.Bot.Subscribers do
   def handle_call({:add, subscriber_id}, _from, state) do
     %{ets_table_name: ets_table_name} = state
     subscribers = lookup_subscribers(state)
-    result = :ets.insert(ets_table_name, {:subscribers, MapSet.put(subscribers, subscriber_id)})
+    result = :dets.insert(ets_table_name, {:subscribers, MapSet.put(subscribers, subscriber_id)})
     {:reply, result, state}
   end
 
@@ -44,26 +44,21 @@ defmodule Campbot.Bot.Subscribers do
     |> Enum.filter(&(&1 != subscriber_id))
     |> Enum.into(MapSet.new)
 
-    :ets.delete(ets_table_name, :subscribers)
-    :ets.insert(ets_table_name, {:subscribers, filtered_subscribers})
+    :dets.delete(ets_table_name, :subscribers)
+    :dets.insert(ets_table_name, {:subscribers, filtered_subscribers})
 
     {:reply, subscriber_id, state}
   end
 
   def init(args) do
     [{:subscriber_table_name, ets_table_name}] = args
-    case :ets.info(ets_table_name) do
-      :undefined ->
-        :ets.new(ets_table_name, [:set, :protected, :named_table])
-        {:ok, %{ets_table_name: ets_table_name}}
-      _ -> {:ok, %{ets_table_name: ets_table_name}}
-    end
-    #:dets.open_file(ets_table_name, [type: :set])
+    :dets.open_file(ets_table_name, [type: :set])
+    {:ok, %{ets_table_name: ets_table_name}}
   end
 
   defp lookup_subscribers(state) do
     %{ets_table_name: ets_table_name} = state
-    case :ets.lookup(ets_table_name, :subscribers) do
+    case :dets.lookup(ets_table_name, :subscribers) do
       [{:subscribers, subscribers}] -> subscribers
       [] -> MapSet.new()
     end
