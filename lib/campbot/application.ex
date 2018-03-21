@@ -13,7 +13,7 @@ defmodule Campbot.Application do
     ]
 
     ## add crawler jobs to child specs
-    #children = children ++ Campbot.Crawler.ChildSpecs.all()
+    children = children ++ Campbot.Crawler.ChildSpecs.all()
 
     # See https://hexdocs.pm/elixir/Supervisor.html
     # for other strategies and supported options
