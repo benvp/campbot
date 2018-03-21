@@ -8,13 +8,12 @@ defmodule Campbot.Application do
 
     # Define workers and child supervisors to be supervised
     children = [
-      # Start the endpoint when the application starts
       supervisor(CampbotWeb.Endpoint, []),
-      # Start your own worker by calling: Campbot.Worker.start_link(arg1, arg2, arg3)
-      # worker(Campbot.Worker, [arg1, arg2, arg3]),
-      worker(Campbot.Bot.Subscribers, []),
-      worker(Campbot.Crawler.Job, [[name: :mather, park_id: "70971", date: "4/14/2018"]]),
+      Campbot.Bot.Subscribers,
     ]
+
+    ## add crawler jobs to child specs
+    children = children ++ Campbot.Crawler.ChildSpecs.all()
 
     # See https://hexdocs.pm/elixir/Supervisor.html
     # for other strategies and supported options

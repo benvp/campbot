@@ -4,7 +4,7 @@ defmodule Campbot.Bot.Subscribers do
   @me __MODULE__
   @subscriber_table_name :subscribers
 
-  def start_link do
+  def start_link(_opts) do
     GenServer.start_link(
       @me,
       [{:subscriber_table_name, @subscriber_table_name}],

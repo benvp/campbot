@@ -1,0 +1,66 @@
+defmodule Campbot.Crawler.ChildSpecs do
+  def all do
+    [
+      # Grand canyon
+      Supervisor.child_spec(
+        {Campbot.Crawler.Job, name: Campbot.Crawler.Job_Mather, park_id: "70971", date: "5/10/2018"},
+        id: {Campbot.Crawler.Job, 1}
+      ),
+      Supervisor.child_spec(
+        {Campbot.Crawler.Job, name: Campbot.Crawler.Job_Mather_2, park_id: "70971", date: "5/11/2018"},
+        id: {Campbot.Crawler.Job, 2}
+      ),
+      # Yosemite
+      Supervisor.child_spec(
+        {Campbot.Crawler.Job, name: Campbot.Crawler.Job_NorthPines_1, park_id: "70927", date: "5/25/2018"},
+        id: {Campbot.Crawler.Job, 3}
+      ),
+      Supervisor.child_spec(
+        {Campbot.Crawler.Job, name: Campbot.Crawler.Job_NorthPines_2, park_id: "70927", date: "5/26/2018"},
+        id: {Campbot.Crawler.Job, 4}
+      ),
+      Supervisor.child_spec(
+        {Campbot.Crawler.Job, name: Campbot.Crawler.Job_LowerPines_1, park_id: "70928", date: "5/25/2018"},
+        id: {Campbot.Crawler.Job, 5}
+      ),
+      Supervisor.child_spec(
+        {Campbot.Crawler.Job, name: Campbot.Crawler.Job_LowerPines_2, park_id: "70928", date: "5/26/2018"},
+        id: {Campbot.Crawler.Job, 6}
+      ),
+      Supervisor.child_spec(
+        {Campbot.Crawler.Job, name: Campbot.Crawler.Job_UpperPines_1, park_id: "70925", date: "5/25/2018"},
+        id: {Campbot.Crawler.Job, 7}
+      ),
+      Supervisor.child_spec(
+        {Campbot.Crawler.Job, name: Campbot.Crawler.Job_UpperPines_2, park_id: "70925", date: "5/26/2018"},
+        id: {Campbot.Crawler.Job, 8}
+      ),
+      # Arches
+      Supervisor.child_spec(
+        {Campbot.Crawler.Job, name: Campbot.Crawler.Job_DevilsGarden_1, park_id: "74066", date: "5/14/2018"},
+        id: {Campbot.Crawler.Job, 9}
+      ),
+      Supervisor.child_spec(
+        {Campbot.Crawler.Job, name: Campbot.Crawler.Job_DevilsGarden_2, park_id: "74066", date: "5/15/2018"},
+        id: {Campbot.Crawler.Job, 10}
+      ),
+      # Bryce Canyon
+      Supervisor.child_spec(
+        {Campbot.Crawler.Job, name: Campbot.Crawler.Job_NorthCampground_1, park_id: "74065", date: "5/16/2018"},
+        id: {Campbot.Crawler.Job, 11}
+      ),
+      Supervisor.child_spec(
+        {Campbot.Crawler.Job, name: Campbot.Crawler.Job_NorthCampground_2, park_id: "74065", date: "5/17/2018"},
+        id: {Campbot.Crawler.Job, 12}
+      ),
+      Supervisor.child_spec(
+        {Campbot.Crawler.Job, name: Campbot.Crawler.Job_SunsetCampground_1, park_id: "74088", date: "5/16/2018"},
+        id: {Campbot.Crawler.Job, 13}
+      ),
+      Supervisor.child_spec(
+        {Campbot.Crawler.Job, name: Campbot.Crawler.Job_SunsetCampground_2, park_id: "74088", date: "5/17/2018"},
+        id: {Campbot.Crawler.Job, 14}
+      ),
+    ]
+  end
+end
