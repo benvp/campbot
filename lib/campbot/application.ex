@@ -9,7 +9,7 @@ defmodule Campbot.Application do
     # Define workers and child supervisors to be supervised
     children = [
       supervisor(CampbotWeb.Endpoint, []),
-      #Campbot.Bot.Subscribers,
+      Campbot.Bot.Subscribers,
     ]
 
     ## add crawler jobs to child specs
