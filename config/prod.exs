@@ -15,11 +15,17 @@ use Mix.Config
 # which you typically run after static files are built.
 config :campbot, CampbotWeb.Endpoint,
   load_from_system_env: true,
+  server: true,
+  secret_key_base: "${SECRET_KEY_BASE}",
   url: [host: "example.com", port: 80],
   cache_static_manifest: "priv/static/cache_manifest.json"
 
 # Do not print debug messages in production
 config :logger, level: :info
+
+config :campbot,
+  facebook_messenger_verify_token: "${FACEBOOK_MESSENGER_VERIFY_TOKEN}",
+  facebook_messenger_page_access_token: "${FACEBOOK_MESSENGER_PAGE_ACCESS_TOKEN}"
 
 # ## SSL Support
 #
@@ -61,4 +67,4 @@ config :logger, level: :info
 
 # Finally import the config/prod.secret.exs
 # which should be versioned separately.
-import_config "prod.secret.exs"
+# import_config "prod.secret.exs"
