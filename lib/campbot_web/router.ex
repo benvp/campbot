@@ -8,6 +8,8 @@ defmodule CampbotWeb.Router do
   scope "/", CampbotWeb do
     pipe_through :api
 
+    get "/", HomeController, :index
+
     get "/webhook", CampbotController, :verify
     post "/webhook", CampbotController, :receive
   end
