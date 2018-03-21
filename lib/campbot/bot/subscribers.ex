@@ -52,9 +52,13 @@ defmodule Campbot.Bot.Subscribers do
 
   def init(args) do
     [{:subscriber_table_name, ets_table_name}] = args
-    :ets.new(ets_table_name, [:set, :protected, :named_table])
+    case :ets.info(ets_table_name) do
+      :undefined ->
+        :ets.new(ets_table_name, [:set, :protected, :named_table])
+        {:ok, %{ets_table_name: ets_table_name}}
+      _ -> {:ok, %{ets_table_name: ets_table_name}}
+    end
     #:dets.open_file(ets_table_name, [type: :set])
-    {:ok, %{ets_table_name: ets_table_name}}
   end
 
   defp lookup_subscribers(state) do
