@@ -1,6 +1,8 @@
 defmodule Campbot.Crawler.Job do
   use GenServer
 
+  require Logger
+
   alias Campbot.Bot
   alias Campbot.Crawler
 
@@ -29,9 +31,14 @@ defmodule Campbot.Crawler.Job do
   end
 
   defp process_campsites(park_id, date, page) do
+    metadata = [park_id: park_id, date: date]
+    Logger.info("Searching for a free campspot...", metadata)
     case Crawler.get_campsites(date, park_id, page) do
-      [] -> nil
+      [] ->
+        Logger.info("No campsites for campground #{park_id} available.", metadata)
+        nil
       campsites ->
+        Logger.info("Found available campsites for campground #{park_id}.", metadata)
         Bot.notify_users(campsites)
         process_campsites(park_id, date, page + 1)
     end
