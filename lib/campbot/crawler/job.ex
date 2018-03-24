@@ -27,7 +27,7 @@ defmodule Campbot.Crawler.Job do
   end
 
   defp schedule_work() do
-    Process.send_after(self(), :work, 10 * 60 * 1000) # 5 minutes
+    Process.send_after(self(), :work, 10 * 60 * 1000) # 10 minutes
   end
 
   defp process_campsites(park_id, date, page) do

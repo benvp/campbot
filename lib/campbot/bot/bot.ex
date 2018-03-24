@@ -12,12 +12,20 @@ defmodule Campbot.Bot do
   end
 
   def process_message(message) do
-    %{"message" => %{"text" => text}, "sender" => %{"id" => sender_psid}} = message |> Map.get("messaging") |> List.first()
+    msg = message |> Map.get("messaging") |> List.first()
 
-    case text |> String.downcase() do
-      "subscribe" -> process_subscribe(sender_psid)
-      _ -> send_message(sender_psid, ~s{Sorry, I'm not very clever. 😑 I only understand "subscribe"})
+    cond do
+      %{"message" => %{"text" => text}, "sender" => %{"id" => sender_psid}} = msg ->
+        case text |> String.downcase() do
+          "subscribe" -> process_subscribe(sender_psid)
+          _ -> send_message(sender_psid, ~s{Sorry, I'm not very clever. 😑 I only understand "subscribe"})
+        end
+      %{"sender" => %{"id" => sender_psid}} = msg ->
+        send_message(sender_psid, ~s{Sorry, I'm not very clever. 😑 I only understand "subscribe"})
+      true -> nil
     end
+
+
   end
 
   def process_subscribe(psid) do
