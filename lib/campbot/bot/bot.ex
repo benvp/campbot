@@ -14,18 +14,15 @@ defmodule Campbot.Bot do
   def process_message(message) do
     msg = message |> Map.get("messaging") |> List.first()
 
-    cond do
-      %{"message" => %{"text" => text}, "sender" => %{"id" => sender_psid}} = msg ->
+    case msg
+      %{"message" => %{"text" => text}, "sender" => %{"id" => sender_psid}}
         case text |> String.downcase() do
           "subscribe" -> process_subscribe(sender_psid)
-          _ -> send_message(sender_psid, ~s{Sorry, I'm not very clever. 😑 I only understand "subscribe"})
+          _ -> send_dunno(sender_psid)
         end
-      %{"sender" => %{"id" => sender_psid}} = msg ->
-        send_message(sender_psid, ~s{Sorry, I'm not very clever. 😑 I only understand "subscribe"})
-      true -> nil
+      %{"sender" => %{"id" => sender_psid}} -> send_dunno(sender_psid)
+      _ -> nil
     end
-
-
   end
 
   def process_subscribe(psid) do
@@ -44,6 +41,10 @@ defmodule Campbot.Bot do
 
   def send_campsite_message(psid, campsite) do
     send_message(psid, campsite_message(campsite))
+  end
+
+  def send_dunno(psid) do
+    send_message(psid, ~s{Sorry, I'm not very clever. 😑 I only understand "subscribe"})
   end
 
   def send_message(psid, message) do
