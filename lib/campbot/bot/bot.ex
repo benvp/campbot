@@ -14,8 +14,8 @@ defmodule Campbot.Bot do
   def process_message(message) do
     msg = message |> Map.get("messaging") |> List.first()
 
-    case msg
-      %{"message" => %{"text" => text}, "sender" => %{"id" => sender_psid}}
+    case msg do
+      %{"message" => %{"text" => text}, "sender" => %{"id" => sender_psid}} ->
         case text |> String.downcase() do
           "subscribe" -> process_subscribe(sender_psid)
           _ -> send_dunno(sender_psid)
