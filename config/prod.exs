@@ -16,16 +16,16 @@ use Mix.Config
 config :campbot, CampbotWeb.Endpoint,
   load_from_system_env: true,
   server: true,
-  secret_key_base: "${SECRET_KEY_BASE}",
-  url: [host: "example.com", port: 80],
+  secret_key_base: System.get_env("SECRET_KEY_BASE"),
+  url: [host: "campbot.vp.solutions", port: 80],
   cache_static_manifest: "priv/static/cache_manifest.json"
 
 # Do not print debug messages in production
 config :logger, level: :info
 
 config :campbot,
-  facebook_messenger_verify_token: "${FACEBOOK_MESSENGER_VERIFY_TOKEN}",
-  facebook_messenger_page_access_token: "${FACEBOOK_MESSENGER_PAGE_ACCESS_TOKEN}"
+  facebook_messenger_verify_token: System.get_env("FACEBOOK_MESSENGER_VERIFY_TOKEN"),
+  facebook_messenger_page_access_token: System.get_env("FACEBOOK_MESSENGER_PAGE_ACCESS_TOKEN")
 
 # ## SSL Support
 #
