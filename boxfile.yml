@@ -4,5 +4,11 @@ run.config:
     runtime: elixir-1.6
     erlang_runtime: erlang-20
 
+data.storage:
+  image: nanobox/unfs
+
 web.main:
   start: node-start mix phx.server
+  network_dirs:
+    data.storage:
+      - data
