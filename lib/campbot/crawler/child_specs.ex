@@ -72,16 +72,7 @@ defmodule Campbot.Crawler.ChildSpecs do
       Supervisor.child_spec(
         {Campbot.Crawler.Job, name: Campbot.Crawler.Lodgepole_2, park_id: "70941", date: "5/20/2018"},
         id: {Campbot.Crawler.Job, 17}
-      ),
-      # Zion
-       Supervisor.child_spec(
-        {Campbot.Crawler.Job, name: Campbot.Crawler.Watchman_1, park_id: "70923", date: "5/14/2018"},
-        id: {Campbot.Crawler.Job, 18}
-      ),
-      Supervisor.child_spec(
-        {Campbot.Crawler.Job, name: Campbot.Crawler.Watchman_2, park_id: "70923", date: "5/15/2018"},
-        id: {Campbot.Crawler.Job, 19}
-      ),
+      )
     ]
   end
 end
