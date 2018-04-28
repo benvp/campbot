@@ -41,14 +41,6 @@ defmodule Campbot.Crawler.ChildSpecs do
       ),
       # Bryce Canyon
       Supervisor.child_spec(
-        {Campbot.Crawler.Job, name: Campbot.Crawler.Job_NorthCampground_1, park_id: "74065", date: "5/13/2018"},
-        id: {Campbot.Crawler.Job, 10}
-      ),
-      Supervisor.child_spec(
-        {Campbot.Crawler.Job, name: Campbot.Crawler.Job_NorthCampground_2, park_id: "74065", date: "5/14/2018"},
-        id: {Campbot.Crawler.Job, 11}
-      ),
-      Supervisor.child_spec(
         {Campbot.Crawler.Job, name: Campbot.Crawler.Job_NorthCampground_3, park_id: "74065", date: "5/15/2018"},
         id: {Campbot.Crawler.Job, 12}
       ),
